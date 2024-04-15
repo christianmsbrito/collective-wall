@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_15_030027) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_15_040626) do
   create_table "additional_features", force: :cascade do |t|
     t.text "features"
     t.datetime "created_at", null: false
@@ -29,7 +29,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_15_030027) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "media", force: :cascade do |t|
+  create_table "mediums", force: :cascade do |t|
     t.string "type"
     t.text "properties"
     t.datetime "created_at", null: false
@@ -66,6 +66,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_15_030027) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "styles", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "themes", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -74,7 +88,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_15_030027) do
   add_foreign_key "paintings", "additional_features", column: "additional_features_id"
   add_foreign_key "paintings", "color_palettes"
   add_foreign_key "paintings", "compositions"
-  add_foreign_key "paintings", "media"
+  add_foreign_key "paintings", "mediums"
   add_foreign_key "paintings", "perspectives"
   add_foreign_key "paintings", "styles"
   add_foreign_key "paintings", "themes"
