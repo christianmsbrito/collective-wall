@@ -1,0 +1,2 @@
+class AdditionalFeature < ApplicationRecord
+end

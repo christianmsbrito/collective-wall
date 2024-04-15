@@ -1,0 +1,29 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  subject: MyString
+  style: one
+  theme: one
+  composition: one
+  color_palette: one
+  medium: one
+  size: MyString
+  texture_effect: MyString
+  light_shadow: MyString
+  additional_features: one
+  perspective: one
+  historical_context: MyString
+
+two:
+  subject: MyString
+  style: two
+  theme: two
+  composition: two
+  color_palette: two
+  medium: two
+  size: MyString
+  texture_effect: MyString
+  light_shadow: MyString
+  additional_features: two
+  perspective: two
+  historical_context: MyString
