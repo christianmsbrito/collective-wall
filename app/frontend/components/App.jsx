@@ -1,10 +1,9 @@
 import React from 'react';
+import Chat from './modules/Chat';
 
 const App = () => {
   return (
-    <div>
-      Hello World!
-    </div>
+    <Chat/>
   );
 };
 
