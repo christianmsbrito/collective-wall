@@ -67,14 +67,23 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
     builder (3.2.4)
+    chronic (0.10.2)
     concurrent-ruby (1.2.3)
     crass (1.0.6)
     date (3.3.4)
     debug (1.9.2)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    dotenv (3.1.0)
     dry-cli (1.0.0)
     erubi (1.12.0)
+    event_stream_parser (1.0.0)
+    faraday (2.9.0)
+      faraday-net_http (>= 2.0, < 3.2)
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
+    faraday-net_http (3.1.0)
+      net-http
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.4)
@@ -95,6 +104,9 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.5)
     minitest (5.22.3)
+    multipart-post (2.4.0)
+    net-http (0.4.1)
+      uri
     net-imap (0.4.10)
       date
       net-protocol
@@ -150,6 +162,10 @@ GEM
       psych (>= 4.0.0)
     reline (0.5.1)
       io-console (~> 0.5)
+    ruby-openai (6.5.0)
+      event_stream_parser (>= 0.3.0, < 2.0.0)
+      faraday (>= 1)
+      faraday-multipart (>= 1)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -163,6 +179,7 @@ GEM
     timeout (0.4.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    uri (0.13.0)
     vite_rails (3.0.17)
       railties (>= 5.1, < 8)
       vite_ruby (~> 3.0, >= 3.2.2)
@@ -173,6 +190,8 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    whenever (1.0.0)
+      chronic (>= 0.6.3)
     zeitwerk (2.6.13)
 
 PLATFORMS
@@ -180,12 +199,15 @@ PLATFORMS
 
 DEPENDENCIES
   debug
+  dotenv (~> 3.1)
   puma (~> 5.0)
   rails (~> 7.0.7, >= 7.0.7.2)
+  ruby-openai (~> 6.5.0)
   sprockets-rails
   sqlite3 (~> 1.4)
   tzinfo-data
-  vite_rails
+  vite_rails (~> 3.0, >= 3.0.17)
+  whenever (~> 1.0)
 
 RUBY VERSION
    ruby 3.1.4p223

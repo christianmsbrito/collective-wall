@@ -18,7 +18,11 @@ gem "puma", "~> 5.0"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 
-gem "vite_rails"
+gem 'vite_rails', '~> 3.0', '>= 3.0.17'
+
+gem 'ruby-openai', '~> 6.5.0'
+
+gem 'dotenv', '~> 3.1'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -26,6 +30,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'whenever', '~> 1.0'
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
 end

@@ -10,9 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_15_040626) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_19_213953) do
   create_table "additional_features", force: :cascade do |t|
     t.text "features"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "artists", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -27,6 +33,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_15_040626) do
     t.text "qualities"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "contributions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "wall_id", null: false
+    t.index ["user_id"], name: "index_contributions_on_user_id"
+    t.index ["wall_id"], name: "index_contributions_on_wall_id"
   end
 
   create_table "mediums", force: :cascade do |t|
@@ -83,13 +99,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_15_040626) do
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
+    t.index ["name"], name: "index_users_on_name", unique: true
   end
 
-  add_foreign_key "paintings", "additional_features", column: "additional_features_id"
-  add_foreign_key "paintings", "color_palettes"
-  add_foreign_key "paintings", "compositions"
-  add_foreign_key "paintings", "mediums"
-  add_foreign_key "paintings", "perspectives"
-  add_foreign_key "paintings", "styles"
-  add_foreign_key "paintings", "themes"
+  create_table "walls", force: :cascade do |t|
+    t.integer "owner_id"
+    t.text "context"
+    t.datetime "end_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_id"], name: "index_walls_on_owner_id"
+  end
+
+  add_foreign_key "contributions", "walls"
+  add_foreign_key "walls", "users", column: "owner_id"
 end

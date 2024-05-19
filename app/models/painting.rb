@@ -1,9 +1,9 @@
 class Painting < ApplicationRecord
-  belongs_to :style
-  belongs_to :theme
-  belongs_to :composition
+  has_many :styles, as: :styleable
+  has_many :themes, as: :themeable
+  has_one :medium, as: :mediable
+  has_many :compositions, as: :composable
   belongs_to :color_palette
-  belongs_to :medium
   belongs_to :additional_features
   belongs_to :perspective
 end

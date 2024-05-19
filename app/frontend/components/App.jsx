@@ -1,10 +1,9 @@
-import React from 'react';
-import Chat from './modules/Chat';
+import React from "react";
+import Chat from "./modules/Chat";
 
 const App = () => {
-  return (
-    <Chat/>
-  );
+  const props = JSON.parse(document.getElementById("app-props").innerHTML);
+  return <Chat props={props} />;
 };
 
 export default App;

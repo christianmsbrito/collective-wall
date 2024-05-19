@@ -21,4 +21,5 @@ Things you may want to cover:
 
 * Deployment instructions
 
-* ...
+* Runnign the prject: 
+  Development: `npm run dev`

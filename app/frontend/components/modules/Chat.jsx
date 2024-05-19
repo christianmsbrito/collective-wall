@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-function Chat() {
+function Chat({ props }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isDisabled, setIsDisabled] = useState(false);
@@ -20,13 +20,19 @@ function Chat() {
     if (input) {
       setMessages([...messages, input]);
       setInput(''); // Clear the input after sending
-      setIsDisabled(true); // Disable the input after sending
+      // setIsDisabled(true); // Disable the input after sending
     }
   };
 
   const enableInput = () => {
     setIsDisabled(false);
   };
+
+  useEffect(() => {
+    // console.log("contributions", props.contributions);
+    // setMessages(props.contributions.map((contribution) => contribution.word));
+  }, []);
+
 
   return (
     <div>

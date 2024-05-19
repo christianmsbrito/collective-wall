@@ -1,6 +1,7 @@
 {
+  "type": "module",
   "scripts": {
-    "dev": "bin/vite dev"
+    "dev": "rails s && bin/vite dev"
   },
   "devDependencies": {
     "vite": "^5.2.8",
