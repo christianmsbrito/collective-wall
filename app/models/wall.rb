@@ -6,14 +6,10 @@ class Wall < ApplicationRecord
   validates :context, presence: true
 
   def paint_contribution(content, user_id)
-    puts "Painting contribution", content, user_id, id
     transaction do
-      # contribution = contributions.build(content: content, user_id: user_id)
-      contribution = Contribution.new(content: content, user_id: user_id, wall_id: id)
-      contribution.save
-      puts contribution.inspect
-      self.contributions << contribution
-      save
+      contribution = contributions.build(content: content, user_id: user_id)
+      contribution.save!
+      contribution
     end
   end
 

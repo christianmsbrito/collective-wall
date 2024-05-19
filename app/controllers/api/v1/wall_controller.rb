@@ -37,30 +37,15 @@ class Api::V1::WallController < ApplicationController
   def contributions_index
     wall = Wall.find(params[:wall_id])
     if not wall.nil?
-        render json: { test: true }
+        render json: { contributions: wall.contributions }
     else
         render json: {error: "Wall not found"}
     end
   end
 
-  # # GET /:id/contributions/:id
-  # def show_contribution
-  #   wall = Wall.find(params[:id])
-  #   @contribution = wall.contributions.find(params[:id])
-  #   render json: @contribution
-  # end
 
   private
-
   def contribution_params
     params.require(:contribution).permit(:content, :author)
-  end
-
-  def content
-    @content |= contribution_params[:content]
-  end
-
-  def author
-    @author |= contribution_params[:author]
   end
 end

@@ -29,8 +29,8 @@ function Chat({ props }) {
   };
 
   useEffect(() => {
-    // console.log("contributions", props.contributions);
-    // setMessages(props.contributions.map((contribution) => contribution.word));
+    console.log("contributions", props.contributions);
+    setMessages(props.contributions.map((contribution) => contribution.word));
   }, []);
 
 
