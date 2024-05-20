@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../../api';
 
 function Chat({ props }) {
-  const [messages, setMessages] = useState(props.wall.contributions.map((contribution) => contribution.content));
+  const [messages, setMessages] = useState([props?.wall?.context, ...props?.wall?.contributions?.map?.((contribution) => contribution.content)]);
   const [input, setInput] = useState('');
   const [isDisabled, setIsDisabled] = useState(false);
 
@@ -34,8 +34,8 @@ function Chat({ props }) {
     <div>
       <h1>Chat</h1>
       <ul>
-        {messages.map((message, index) => (
-          <li key={index}>{message}</li>
+        {messages.map((message) => (
+          <li key={message.id}>{message}</li>
         ))}
       </ul>
       <form onSubmit={handleSubmit}>
