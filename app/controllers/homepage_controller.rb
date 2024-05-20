@@ -4,7 +4,14 @@ class HomepageController < ApplicationController
 
     if test_user
       wall = Wall.find_by(created_at: Date.today.beginning_of_day..Date.today.end_of_day)
-      @app_props = { some_key: "test app data", contributions: wall.contributions.map { |contribution| { user: contribution.user.name, word: contribution.content } } }
+      @app_props = {
+        wall: { 
+          id: wall.id, 
+          owner: wall.owner.id,
+          context: wall.context,
+          contributions: wall.contributions.map { |contribution| { user: contribution.user.name, content: contribution.content } }
+        }
+      }
     else
       puts test_user.errors.full_messages
     end

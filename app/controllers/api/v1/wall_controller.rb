@@ -1,5 +1,6 @@
 class Api::V1::WallController < ApplicationController
   skip_before_action :verify_authenticity_token
+
   # GET /:id
   def show
     wall = Wall.find(params[:id])
@@ -14,9 +15,10 @@ class Api::V1::WallController < ApplicationController
 
   # POST /
   def create
-    test_user = User.find_or_create_by(name: "Test User")
-    wall = Wall.new(context: "Once uppon a time there was a wall", owner: test_user)
-    wall.save
+    wall = Wall.create(
+      context: "Once upon a time there was a wall",
+      owner: User.find_or_create_by(name: "Test User")
+    )
     render json: wall
   end
 
@@ -25,11 +27,11 @@ class Api::V1::WallController < ApplicationController
     wall = Wall.find(params[:wall_id])
 
     if wall
-      content, author = params[:contribution][:content], params[:contribution][:user_id]
-
-      wall.paint_contribution(content, author)
-      puts wall.inspect
-      render json: wall
+      contribution = wall.paint_contribution(
+        params.dig(:contribution, :content), 
+        params.dig(:contribution, :user_id)
+      )
+      render json: contribution
     end
   end
 

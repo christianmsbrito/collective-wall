@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { api } from '../../api';
 
 function Chat({ props }) {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(props.wall.contributions.map((contribution) => contribution.content));
   const [input, setInput] = useState('');
   const [isDisabled, setIsDisabled] = useState(false);
 
@@ -15,9 +16,10 @@ function Chat({ props }) {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (input) {
+      await api.wall(props.wall.id).createContribution(props.wall.owner, input);
       setMessages([...messages, input]);
       setInput(''); // Clear the input after sending
       // setIsDisabled(true); // Disable the input after sending
@@ -27,12 +29,6 @@ function Chat({ props }) {
   const enableInput = () => {
     setIsDisabled(false);
   };
-
-  useEffect(() => {
-    console.log("contributions", props.contributions);
-    setMessages(props.contributions.map((contribution) => contribution.word));
-  }, []);
-
 
   return (
     <div>
