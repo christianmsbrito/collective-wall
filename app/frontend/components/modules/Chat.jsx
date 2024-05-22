@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../api';
-import { TextField, Box, Button, Typography, CircularProgress } from '@mui/material';
+import { TextField, Box, Button, Typography, CircularProgress, Tooltip } from '@mui/material';
 
 function ChatMessages({ messages }) {
-  const allMessages = messages.join(' ');
   return (
     <Box sx={{ width: '100%', mb: 2 }}>
-      <Typography variant="body1">{allMessages}</Typography>
+      {messages.map((message, index) => (
+        <Tooltip key={index} title={message}>
+          <Typography variant="body1" component="span" sx={{ display: 'inline-block', mr: 1 }}>
+            {message}
+          </Typography>
+        </Tooltip>
+      ))}
     </Box>
   );
 }
