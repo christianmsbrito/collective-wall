@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../../api';
 import TextField from '@mui/material/TextField';
 
-import { Button, List, ListItem, ListItemText } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 
 function ChatMessages({ messages }) {
   const allMessages = messages.join(' ');
   return (
-    <p>{allMessages}</p>
+    <Box sx={{ width: '100%' }}>
+      <Typography>{allMessages}</Typography>
+    </Box>
   );
 }
 
@@ -39,15 +41,17 @@ function ChatInput({ onSubmit }) {
         onChange={handleChange}
         label="Message"
         variant="outlined"
+        style={{ width: '100%' }}
       />
-      <Button type="submit" variant="contained" color="primary">
+      <br />
+      <Button type="submit" variant="contained" color="primary" style={{ width: '100%', marginTop: '10px' }}>
         Send
       </Button>
     </form>
   );
 }
 
-function Chat({ props }) {
+function ChatContainer({ props }) {
   const [messages, setMessages] = useState([
     props?.wall?.context,
     ...props?.wall?.contributions?.map?.((contribution) => contribution.content),
@@ -59,12 +63,12 @@ function Chat({ props }) {
   };
 
   return (
-    <div>
-      <h1>Chat</h1>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', m: 2 }}>
+      <Typography variant="h3">Chat</Typography>
       <ChatMessages messages={messages} />
       <ChatInput onSubmit={handleSubmit} />
-    </div>
+    </Box>
   );
 }
 
-export default Chat;
+export default ChatContainer;
