@@ -3,7 +3,8 @@ class HomepageController < ApplicationController
     test_user = User.find_or_create_by(name: "Test User")
 
     if test_user
-      wall = Wall.find_by(created_at: Date.today.beginning_of_day..Date.today.end_of_day)
+      # wall = Wall.find_by(created_at: Date.today.beginning_of_day..Date.today.end_of_day)
+      wall = Wall.order(created_at: :desc).first
       @app_props = {
         wall: { 
           id: wall.id, 

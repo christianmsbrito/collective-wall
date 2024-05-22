@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../api';
+import TextField from '@mui/material/TextField';
 
-function Chat({ props }) {
-  const [messages, setMessages] = useState([props?.wall?.context, ...props?.wall?.contributions?.map?.((contribution) => contribution.content)]);
+import { Button, List, ListItem, ListItemText } from '@mui/material';
+
+function ChatMessages({ messages }) {
+  const allMessages = messages.join(' ');
+  return (
+    <p>{allMessages}</p>
+  );
+}
+
+function ChatInput({ onSubmit }) {
   const [input, setInput] = useState('');
-  const [isDisabled, setIsDisabled] = useState(false);
 
   const handleChange = (event) => {
     const words = event.target.value.split(' ');
     if (words.length > 1) {
-      // If more than one word is typed, take the first one and clear the input
       setInput(words[0]);
     } else {
       setInput(event.target.value);
@@ -19,35 +26,43 @@ function Chat({ props }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (input) {
-      await api.wall(props.wall.id).createContribution(props.wall.owner, input);
-      setMessages([...messages, input]);
-      setInput(''); // Clear the input after sending
-      // setIsDisabled(true); // Disable the input after sending
+      await onSubmit(input);
+      setInput('');
     }
   };
 
-  const enableInput = () => {
-    setIsDisabled(false);
+  return (
+    <form onSubmit={handleSubmit}>
+      <TextField
+        type="text"
+        value={input}
+        onChange={handleChange}
+        label="Message"
+        variant="outlined"
+      />
+      <Button type="submit" variant="contained" color="primary">
+        Send
+      </Button>
+    </form>
+  );
+}
+
+function Chat({ props }) {
+  const [messages, setMessages] = useState([
+    props?.wall?.context,
+    ...props?.wall?.contributions?.map?.((contribution) => contribution.content),
+  ]);
+
+  const handleSubmit = async (input) => {
+    await api.wall(props.wall.id).createContribution(props.wall.owner, input);
+    setMessages([...messages, input]);
   };
 
   return (
     <div>
       <h1>Chat</h1>
-      <ul>
-        {messages.map((message) => (
-          <li key={message.id}>{message}</li>
-        ))}
-      </ul>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={input}
-          onChange={handleChange}
-          disabled={isDisabled}
-          onBlur={enableInput}
-        />
-        <button type="submit" disabled={isDisabled}>Send</button>
-      </form>
+      <ChatMessages messages={messages} />
+      <ChatInput onSubmit={handleSubmit} />
     </div>
   );
 }
