@@ -81,7 +81,7 @@ class Api::V1::WallController < ApplicationController
 
       wall_diggest_response_json = JSON.parse(wall_diggest_response.dig("choices", 0, "message", "content"))
 
-      render json: { wall: wall, wall_digest: wall_diggest_response_json }
+      # render json: { wall: wall, wall_digest: wall_diggest_response_json }
       
       size = "LARGE"
       subject = wall_diggest_response_json["subject"]
