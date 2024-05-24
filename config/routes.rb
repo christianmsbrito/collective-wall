@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       resources :wall, only: [:index, :show, :create] do
         get  'contributions',     to: 'wall#contributions_index'
         post 'contributions',     to: 'wall#create_contribution'
+        post 'close',             to: 'wall#close_wall'
         # get  'contributions/:contribution_id', to: 'walls#show_contribution'
       end
     end
