@@ -5,7 +5,7 @@ class Wall < ApplicationRecord
   validates :owner, presence: true
   validates :context, presence: true
 
-  def paint_conrtibution(content, user_id)
+  def paint_contribution(content, user_id)
     transaction do
       contribution = contributions.build(content: content, user_id: user_id)
       contribution.save!

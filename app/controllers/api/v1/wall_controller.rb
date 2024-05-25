@@ -16,7 +16,7 @@ class Api::V1::WallController < ApplicationController
   # POST /
   def create
     wall = Wall.create(
-      context: "Once upon a time there was a wall",
+      context: "In a galaxy far far away...",
       owner: User.find_or_create_by(name: "Test User")
     )
     render json: wall
@@ -82,24 +82,56 @@ class Api::V1::WallController < ApplicationController
       wall_diggest_response_json = JSON.parse(wall_diggest_response.dig("choices", 0, "message", "content"))
 
       # render json: { wall: wall, wall_digest: wall_diggest_response_json }
-      
+
+      # Artist 3: Sophia Bell
+      # Style: Realism, focusing on meticulous detail and accuracy.
+      # Theme: Urban life and its complexities.
+      # Medium: Watercolor and graphite for subtle shading and detail.
+      # Composition: Careful arrangement with a focus on depth using perspective techniques.
+      # Historical Context: Draws influence from both contemporary urban scenes and historical realism.
+
+      artist = TestArtist.new(
+        "Sophia Bell", 
+        "Realism, focusing on meticulous detail and accuracy.",
+        "Watercolor and graphite for subtle shading and detail.", 
+        "Careful arrangement with a focus on depth using perspective techniques.",
+        "Draws influence from both contemporary urban scenes and historical realism."
+      )
+
+          # Artist 2: Marco Chen
+    # Style: Abstract Expressionism, emphasizing spontaneous, automatic, or subconscious creation.
+    # Theme: Emotions and abstract concepts like chaos and harmony.
+    # Medium: Acrylics and ink on canvas, often mixed media.
+    # Composition: Dynamic, with an emphasis on bold strokes and irregular forms.
+    # Historical Context: Contemporary, with roots in mid-20th-century abstract expressionism.
+
+
+      # artist = TestArtist.new(
+      #   "Marco Chen", 
+      #   "Abstract Expressionism, emphasizing spontaneous, automatic, or subconscious creation",
+      #   "Acrylics and ink on canvas, often mixed media", 
+      #   "Dynamic, with an emphasis on bold strokes and irregular forms",
+      #   "Contemporary, with roots in mid-20th-century abstract expressionism"
+      # )
+
       size = "LARGE"
       subject = wall_diggest_response_json["subject"]
-      artistic_style = "Abstract Expressionism, emphasizing spontaneous, automatic, or subconscious creation"
+      artistic_style = artist.style
       specific_elements = wall_diggest_response_json["key_elements"]
       color_description = wall_diggest_response_json["color_scheme"]
       desired_compositional_qualities = wall_diggest_response_json["compositional_qualities"]
-      medium = "Acrylics and ink on canvas, often mixed media"
-      texture_or_effect_description = "textured with rough brush strokes"
+      medium = artist.medium
+      texture_or_effect_description = artist.composition
       theme = wall_diggest_response_json["theme"]
       specific_mood_or_atmosphere = wall_diggest_response_json["mood"]
       additional_features = wall_diggest_response_json["additional_features"]
-      historical_cultural_personal_background = "Contemporary, with roots in mid-20th-century abstract expressionism"
+      historical_cultural_personal_background = artist.background
       type_of_perspective = wall_diggest_response_json["perspective"]
 
 
       wall_image_prompt = "Create a #{size} image of a #{subject}, styled in #{artistic_style}. The painting should depict [#{specific_elements.join(', ')}], incorporating a color palette of #{color_description}. Aim for a composition that emphasizes [#{desired_compositional_qualities.join(',')}], using #{medium} to achieve a #{texture_or_effect_description}. The artwork should convey the theme of #{theme}, with careful use of light and shadow to enhance #{specific_mood_or_atmosphere}. Include elements of [#{additional_features.join(',')}] to add depth and context, reflecting the #{historical_cultural_personal_background} influences. Ensure the perspective adopts #{type_of_perspective} to realistically represent spatial depth."
     
+      puts wall_image_prompt
     #   # Use the prompt in the API call
       response = client.images.generate(parameters: { prompt: wall_image_prompt, quality: "standard" })
 
@@ -118,5 +150,17 @@ class Api::V1::WallController < ApplicationController
   private
   def contribution_params
     params.require(:contribution).permit(:content, :author)
+  end
+end
+
+class TestArtist
+  attr_accessor :name, :style, :theme, :medium, :composition, :background
+
+  def initialize(name, style, medium, composition, background)
+    @name = name
+    @style = style
+    @medium = medium
+    @composition = composition
+    @background = background
   end
 end
