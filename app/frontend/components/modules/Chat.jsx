@@ -31,12 +31,12 @@ function ChatInput({ onSubmit, isLoading }) {
   const [input, setInput] = useState("");
 
   const handleChange = (event) => {
-    const words = event.target.value.split(" ");
-    if (words.length > 1) {
-      setInput(words[0]);
-    } else {
+    // const words = event.target.value.split(" ");
+    // if (words.length > 1) {
+    //   setInput(words[0]);
+    // } else {
       setInput(event.target.value);
-    }
+    // }
   };
 
   const handleSubmit = async (event) => {
@@ -106,7 +106,7 @@ function ChatContainer({ props }) {
     setError(null);
     try {
       const { image } = await api.wall(props.wall.id).paint();
-      console.log(image)
+      console.log(image);
       setImage(image);
     } catch (err) {
       console.error(err);
@@ -117,7 +117,14 @@ function ChatContainer({ props }) {
   };
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box
+      sx={{
+        width: "75%",
+        ml: "auto",
+        mr: "auto",
+        p: 2,
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -149,19 +156,20 @@ function ChatContainer({ props }) {
       <ChatMessages messages={messages} />
       {error && <Typography color="error">{error}</Typography>}
       <ChatInput onSubmit={handleSubmit} isLoading={isLoading} />
-      {image && <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
-        <img
-          // src="https://oaidalleapiprodscus.blob.core.windows.net/private/org-t5m4QHgOMY1w92dBNMrKWmYK/user-rgzvizsDnG3RHmFDFiFl0Aco/img-9YIA4txGFP0NiO418TPJEkHw.png?st=2024-05-25T03%3A06%3A54Z&se=2024-05-25T05%3A06%3A54Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-05-24T22%3A49%3A08Z&ske=2024-05-25T22%3A49%3A08Z&sks=b&skv=2021-08-06&sig=4fWaQK%2Be9otIrMA5lRsyNGq0yJiS2CHqb0gTvBj8BuE%3D"
-          src={image}
-          alt="test"
-          style={{
-            width: "75%",
-            height: "auto",
-            maxWidth: "100vw",
-            maxHeight: "100vh",
-          }}
-        />
-      </Box>}
+      {image && (
+        <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+          <img
+            src={image}
+            alt="test"
+            style={{
+              width: "100%",
+              height: "auto",
+              maxWidth: "100vw",
+              maxHeight: "100vh",
+            }}
+          />
+        </Box>
+      )}
     </Box>
   );
 }
