@@ -1,13 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { api } from '../../api';
-import { TextField, Box, Button, Typography, CircularProgress, Tooltip } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import { api } from "../../api";
+import {
+  TextField,
+  Box,
+  Button,
+  Typography,
+  CircularProgress,
+  Tooltip,
+} from "@mui/material";
 
 function ChatMessages({ messages }) {
   return (
-    <Box sx={{ width: '100%', mb: 2 }}>
+    <Box sx={{ width: "100%", mb: 2 }}>
       {messages.map((message, index) => (
         <Tooltip key={index} title={message}>
-          <Typography variant="body1" component="span" sx={{ display: 'inline-block', mr: 1 }}>
+          <Typography
+            variant="body1"
+            component="span"
+            sx={{ display: "inline-block", mr: 1 }}
+          >
             {message}
           </Typography>
         </Tooltip>
@@ -17,22 +28,22 @@ function ChatMessages({ messages }) {
 }
 
 function ChatInput({ onSubmit, isLoading }) {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
 
   const handleChange = (event) => {
-    const words = event.target.value.split(' ');
+    const words = event.target.value.split(" ");
     if (words.length > 1) {
       setInput(words[0]);
     } else {
       setInput(event.target.value);
     }
   };
-  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (input.trim()) {
       await onSubmit(input.trim());
-      setInput('');
+      setInput("");
     }
   };
 
@@ -55,7 +66,7 @@ function ChatInput({ onSubmit, isLoading }) {
         sx={{ mt: 2 }}
         disabled={isLoading}
       >
-        {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Send'}
+        {isLoading ? <CircularProgress size={24} color="inherit" /> : "Send"}
       </Button>
     </form>
   );
@@ -65,11 +76,14 @@ function ChatContainer({ props }) {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     const initialMessages = [
       props?.wall?.context,
-      ...props?.wall?.contributions?.map((contribution) => contribution.content),
+      ...props?.wall?.contributions?.map(
+        (contribution) => contribution.content
+      ),
     ];
     setMessages(initialMessages);
   }, [props]);
@@ -81,7 +95,22 @@ function ChatContainer({ props }) {
       await api.wall(props.wall.id).createContribution(props.wall.owner, input);
       setMessages((prevMessages) => [...prevMessages, input]);
     } catch (err) {
-      setError('Failed to send message');
+      setError("Failed to send message");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const paintWall = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { image } = await api.wall(props.wall.id).paint();
+      console.log(image)
+      setImage(image);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to paint wall");
     } finally {
       setIsLoading(false);
     }
@@ -89,12 +118,50 @@ function ChatContainer({ props }) {
 
   return (
     <Box sx={{ p: 2 }}>
-      <Typography variant="h3" gutterBottom>
-        Chat
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          direction: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Typography variant="h3">Collective Wall</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          {/* <Button variant="contained" color="primary">
+            Button 1
+          </Button> */}
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{ ml: 2 }}
+            onClick={paintWall}
+          >
+            Paint
+          </Button>
+        </Box>
+      </Box>
       <ChatMessages messages={messages} />
       {error && <Typography color="error">{error}</Typography>}
       <ChatInput onSubmit={handleSubmit} isLoading={isLoading} />
+      {image && <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+        <img
+          // src="https://oaidalleapiprodscus.blob.core.windows.net/private/org-t5m4QHgOMY1w92dBNMrKWmYK/user-rgzvizsDnG3RHmFDFiFl0Aco/img-9YIA4txGFP0NiO418TPJEkHw.png?st=2024-05-25T03%3A06%3A54Z&se=2024-05-25T05%3A06%3A54Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-05-24T22%3A49%3A08Z&ske=2024-05-25T22%3A49%3A08Z&sks=b&skv=2021-08-06&sig=4fWaQK%2Be9otIrMA5lRsyNGq0yJiS2CHqb0gTvBj8BuE%3D"
+          src={image}
+          alt="test"
+          style={{
+            width: "75%",
+            height: "auto",
+            maxWidth: "100vw",
+            maxHeight: "100vh",
+          }}
+        />
+      </Box>}
     </Box>
   );
 }

@@ -25,3 +25,23 @@ export async function createContribution(wallId, userId, content) {
         console.error(error);
     }
 }
+
+export async function paintWall(wallId) {
+    try {
+        const response = await fetch(`${apiBaseUrl}/${wallId}/close`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to paint wall');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+}

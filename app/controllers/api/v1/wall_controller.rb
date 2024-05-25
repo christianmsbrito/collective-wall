@@ -83,6 +83,21 @@ class Api::V1::WallController < ApplicationController
 
       # render json: { wall: wall, wall_digest: wall_diggest_response_json }
 
+          # Artist 1: Elena Rodriguez
+    # Style: Impressionism, with a focus on light and color rather than detail.
+    # Theme: Nature and tranquility.
+    # Medium: Oil paint, known for its rich texture and vibrant colors.
+    # Composition: Prefers balanced compositions with an emphasis on horizontal lines to evoke calmness.
+    # Historical Context: Modern, with influences from early 20th-century impressionists.
+
+    # artist = TestArtist.new(
+    #   "Elena Rodriguez",
+    #   "Impressionism, with a focus on light and color rather than detail",
+    #   "Oil paint, known for its rich texture and vibrant colors",
+    #   "Prefers balanced compositions with an emphasis on horizontal lines to evoke calmness",
+    #   "Modern, with influences from early 20th-century impressionists"
+    # )
+
       # Artist 3: Sophia Bell
       # Style: Realism, focusing on meticulous detail and accuracy.
       # Theme: Urban life and its complexities.
@@ -92,10 +107,10 @@ class Api::V1::WallController < ApplicationController
 
       artist = TestArtist.new(
         "Sophia Bell", 
-        "Realism, focusing on meticulous detail and accuracy.",
-        "Watercolor and graphite for subtle shading and detail.", 
-        "Careful arrangement with a focus on depth using perspective techniques.",
-        "Draws influence from both contemporary urban scenes and historical realism."
+        "Realism, focusing on meticulous detail and accuracy",
+        "Watercolor and graphite for subtle shading and detail", 
+        "Careful arrangement with a focus on depth using perspective techniques",
+        "Draws influence from both contemporary urban scenes and historical realism"
       )
 
           # Artist 2: Marco Chen
@@ -112,6 +127,15 @@ class Api::V1::WallController < ApplicationController
       #   "Acrylics and ink on canvas, often mixed media", 
       #   "Dynamic, with an emphasis on bold strokes and irregular forms",
       #   "Contemporary, with roots in mid-20th-century abstract expressionism"
+      # )
+
+
+      # artist = TestArtist.new(
+      #   "Takaro Nozomi", 
+      #   "Manga, focusing on meticulous detail and accuracy",
+      #   "Nanquim and digital for subtle shading and detail", 
+      #   "Careful arrangement with a focus on depth using perspective techniques",
+      #   "Draws influence from both contemporary urban scenes and historical realism"
       # )
 
       size = "LARGE"
@@ -138,8 +162,13 @@ class Api::V1::WallController < ApplicationController
     #   # puts prompt
     #   # render json: { prompt: prompt }
 
-      puts response.dig("data", 0, "url")
-      render json: { image: response.dig("data", 0, "url"), wall: wall, wall_digest: wall_diggest_response_json }
+      # puts response.dig("data", 0, "url")
+      render json: {
+        image: response.dig("data", 0, "url"),
+        # image: "https://oaidalleapiprodscus.blob.core.windows.net/private/org-t5m4QHgOMY1w92dBNMrKWmYK/user-rgzvizsDnG3RHmFDFiFl0Aco/img-iRRUMkImc4nUkTigka3tbc41.png?st=2024-05-25T03%3A05%3A09Z&se=2024-05-25T05%3A05%3A09Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-05-24T21%3A21%3A56Z&ske=2024-05-25T21%3A21%3A56Z&sks=b&skv=2021-08-06&sig=SogWXIeZUcdwTcVbPm7T/svwolaL8jyCr%2BTqZyiQjGg%3D",
+        wall: wall,
+        wall_digest: wall_diggest_response_json
+      }
 
     #   render json: wall
     # else
