@@ -53,7 +53,9 @@ class Api::V1::WallController < ApplicationController
       wall_digest_response = generate_wall_digest(wall.painting_prompt)
       wall_digest_response_json = JSON.parse(wall_digest_response)
       artist = create_test_artist
+      puts "wall_digest_response_json:", wall_digest_response_json
       wall_image_prompt = generate_wall_image_prompt(wall_digest_response_json, artist)
+      puts "wall_image_prompt:", wall_image_prompt
       image_url = generate_wall_image(wall_image_prompt)
       render json: {
         wall: wall,
@@ -70,7 +72,7 @@ class Api::V1::WallController < ApplicationController
     wall_digest_prompt = <<~PROMPT
       Analyze the following picture description: "#{painting_prompt}"
 
-      Break down the image description into the following specific topics, and provide your responses in a 1-liner CSV format with each response separated by a semicolon (;):
+      Break down the image description into the following specific topics:
 
       {subject} (String) - What is the primary subject or scene depicted in the image? (e.g., "a serene lakeside scene")
       {key_elements} Array<String> - What are the key elements of the subject to focus on? (e.g., "the reflection of the setting sun on the water")
@@ -81,7 +83,8 @@ class Api::V1::WallController < ApplicationController
       {additional_features} (Array<String>) - What additional features or details are included? (e.g., "period clothing")
       {perspective} (String) - What type of perspective is used? (e.g., "two-point perspective")
 
-      Please provide the output as a valid JSON obejct using the keys described above.
+      - Make sure to be detailed on each topic for better accuracy. 
+      - Provide the output as a valid JSON obejct using the keys described above.
     PROMPT
 
     wall_digest_response = client.chat(
@@ -123,9 +126,41 @@ class Api::V1::WallController < ApplicationController
   end
 
   def generate_wall_image(wall_image_prompt)
-    client = OpenAI::Client.new
-    response = client.images.generate(parameters: { prompt: wall_image_prompt, quality: "standard" })
-    response.dig("data", 0, "url")
+    begin
+      client = OpenAI::Client.new
+      response = client.images.generate(parameters: { prompt: wall_image_prompt, quality: "hd" })
+      puts "response >", response
+      response.dig("data", 0, "url")
+    rescue Faraday::BadRequestError => e
+      error_response = e.response[:body]
+      error_message = error_response['error']['message'];
+
+      if error_message =~ /Prompt must be length \d+ or less/
+        
+        response = client.chat(
+          parameters: {
+            model: "gpt-3.5-turbo",
+            messages: [{ 
+              role: "user", 
+              content: <<~PROMPT
+                Given the following prompt for generating an image below. Make adjusts to it to address the error message described.
+
+                - Current Prompt: "#{wall_image_prompt}"
+
+                - Error Message: "#{error_message}"
+              PROMPT
+            }],
+          }
+        )
+        new_prompt = response.dig("choices", 0, "message", "content")
+
+        puts "New prompt generated: #{new_prompt}"
+
+        generate_wall_image(new_prompt)
+      end
+    rescue StandardError => e
+      puts "Error generating image: #{e.inspect}"
+    end
   end
 
   private
