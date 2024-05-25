@@ -132,35 +132,42 @@ class Api::V1::WallController < ApplicationController
       puts "response >", response
       response.dig("data", 0, "url")
     rescue Faraday::BadRequestError => e
-      error_response = e.response[:body]
-      error_message = error_response['error']['message'];
-
-      if error_message =~ /Prompt must be length \d+ or less/
-        
-        response = client.chat(
-          parameters: {
-            model: "gpt-3.5-turbo",
-            messages: [{ 
-              role: "user", 
-              content: <<~PROMPT
-                Given the following prompt for generating an image below. Make adjusts to it to address the error message described.
-
-                - Current Prompt: "#{wall_image_prompt}"
-
-                - Error Message: "#{error_message}"
-              PROMPT
-            }],
-          }
-        )
-        new_prompt = response.dig("choices", 0, "message", "content")
-
-        puts "New prompt generated: #{new_prompt}"
-
-        generate_wall_image(new_prompt)
-      end
+      handle_bad_request_error(e, wall_image_prompt)
     rescue StandardError => e
       puts "Error generating image: #{e.inspect}"
     end
+  end
+
+  private
+
+  def handle_bad_request_error(error, wall_image_prompt)
+    error_message = error.response[:body]['error']['message']
+
+    if error_message =~ /Prompt must be length \d+ or less/
+      new_prompt = generate_new_prompt(wall_image_prompt, error)
+      puts "New prompt generated: #{new_prompt}"
+      generate_wall_image(new_prompt)
+    end
+  end
+
+  def generate_new_prompt(original_image_prompt, error_message)
+    client = OpenAI::Client.new
+    response = client.chat(
+      parameters: {
+        model: "gpt-3.5-turbo",
+        messages: [{
+          role: "user",
+          content: <<~PROMPT
+            Given the following prompt for generating an image below. Make adjusts to it to address the error message described.
+
+            - Current Prompt: "#{original_image_prompt}"
+
+            - Error Message: "#{error_message}"
+          PROMPT
+        }],
+      }
+    )
+    response.dig("choices", 0, "message", "content")
   end
 
   private
