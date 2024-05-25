@@ -98,10 +98,25 @@ class Api::V1::WallController < ApplicationController
   end
 
   def create_test_artist
+    # TestArtist.new(
+    #   "Takaro Nozomi",
+    #   "Manga, focusing on meticulous detail and accuracy",
+    #   "Nanquim and digital for subtle shading and detail",
+    #   "Careful arrangement with a focus on depth using perspective techniques",
+    #   "Draws influence from both contemporary urban scenes and historical realism"
+    # )
+
+          # Artist 3: Sophia Bell
+      # Style: Realism, focusing on meticulous detail and accuracy.
+      # Theme: Urban life and its complexities.
+      # Medium: Watercolor and graphite for subtle shading and detail.
+      # Composition: Careful arrangement with a focus on depth using perspective techniques.
+      # Historical Context: Draws influence from both contemporary urban scenes and historical realism.
+
     TestArtist.new(
-      "Takaro Nozomi",
-      "Manga, focusing on meticulous detail and accuracy",
-      "Nanquim and digital for subtle shading and detail",
+      "Sophia Bell",
+      "Realism, focusing on meticulous detail and accuracy",
+      "Watercolor and graphite for subtle shading and detail",
       "Careful arrangement with a focus on depth using perspective techniques",
       "Draws influence from both contemporary urban scenes and historical realism"
     )
@@ -143,6 +158,8 @@ class Api::V1::WallController < ApplicationController
   def handle_bad_request_error(error, wall_image_prompt)
     error_message = error.response[:body]['error']['message']
 
+    puts "Error message: #{error_message}"
+
     if error_message =~ /Prompt must be length \d+ or less/
       new_prompt = generate_new_prompt(wall_image_prompt, error)
       puts "New prompt generated: #{new_prompt}"
@@ -158,11 +175,13 @@ class Api::V1::WallController < ApplicationController
         messages: [{
           role: "user",
           content: <<~PROMPT
-            Given the following prompt for generating an image below. Make adjusts to it to address the error message described.
+            Given the following prompt for generating an image below that exceeds the max length, make it a little shorter - try to keep it close to boundary max length - to fit the limits described in the error.
 
             - Current Prompt: "#{original_image_prompt}"
 
             - Error Message: "#{error_message}"
+
+            Your output should be a revised prompt that is shorter in length but still conveys the same information.
           PROMPT
         }],
       }
