@@ -35,7 +35,7 @@ function ChatInput({ onSubmit, isLoading }) {
     // if (words.length > 1) {
     //   setInput(words[0]);
     // } else {
-      setInput(event.target.value);
+    setInput(event.target.value);
     // }
   };
 
@@ -77,6 +77,7 @@ function ChatContainer({ props }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [image, setImage] = useState(null);
+  const [isClosed, setIsClosed] = useState(props.wall.is_closed);
 
   useEffect(() => {
     const initialMessages = [
@@ -108,6 +109,7 @@ function ChatContainer({ props }) {
       const { image } = await api.wall(props.wall.id).paint();
       console.log(image);
       setImage(image);
+      setIsClosed(true);
     } catch (err) {
       console.error(err);
       setError("Failed to paint wall");
@@ -143,19 +145,19 @@ function ChatContainer({ props }) {
           {/* <Button variant="contained" color="primary">
             Button 1
           </Button> */}
-          <Button
+          { !isClosed && <Button
             variant="contained"
             color="secondary"
             sx={{ ml: 2 }}
             onClick={paintWall}
           >
             Paint
-          </Button>
+          </Button> }
         </Box>
       </Box>
       <ChatMessages messages={messages} />
       {error && <Typography color="error">{error}</Typography>}
-      <ChatInput onSubmit={handleSubmit} isLoading={isLoading} />
+      {!image && <ChatInput onSubmit={handleSubmit} isLoading={isLoading} />}
       {image && (
         <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
           <img

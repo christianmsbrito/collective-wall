@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_19_213953) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_25_210926) do
   create_table "additional_features", force: :cascade do |t|
     t.text "features"
     t.datetime "created_at", null: false
@@ -109,6 +109,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_19_213953) do
     t.datetime "end_time"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "image_url"
+    t.boolean "is_closed"
     t.index ["owner_id"], name: "index_walls_on_owner_id"
   end
 

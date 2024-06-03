@@ -1,3 +1,5 @@
+require 'open-uri'
+
 class Api::V1::WallController < ApplicationController
   skip_before_action :verify_authenticity_token
 
@@ -51,16 +53,20 @@ class Api::V1::WallController < ApplicationController
 
     if wall
       wall_digest_response = generate_wall_digest(wall.painting_prompt)
-      wall_digest_response_json = JSON.parse(wall_digest_response)
       artist = create_test_artist
-      puts "wall_digest_response_json:", wall_digest_response_json
-      wall_image_prompt = generate_wall_image_prompt(wall_digest_response_json, artist)
+      puts "wall_digest_response_json:", wall_digest_response
+      wall_image_prompt = generate_wall_image_prompt(wall_digest_response, artist)
       puts "wall_image_prompt:", wall_image_prompt
       image_url = generate_wall_image(wall_image_prompt)
+      File.open("public/#{wall.id}.jpg", "wb") do |file|
+        file.write(URI.open(image_url).read)
+      end
+      local_image_url = "/images/#{wall.id}.jpg"
+      wall.update(image_url: local_image_url, is_closed: true)
       render json: {
         wall: wall,
-        wall_digest: wall_digest_response_json,
-        image: image_url
+        wall_digest: wall_digest_response,
+        image: local_image_url
       }
     end
   end
@@ -94,7 +100,9 @@ class Api::V1::WallController < ApplicationController
         response_format: { type: "json_object" },
       }
     )
-    wall_digest_response.dig("choices", 0, "message", "content")
+    
+    puts "wall_digest_response >", wall_digest_response.dig("choices", 0, "message", "content")
+    JSON.parse(wall_digest_response.dig("choices", 0, "message", "content"))
   end
 
   def create_test_artist

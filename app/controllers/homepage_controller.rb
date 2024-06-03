@@ -4,12 +4,13 @@ class HomepageController < ApplicationController
 
     if test_user
       # wall = Wall.find_by(created_at: Date.today.beginning_of_day..Date.today.end_of_day)
-      wall = Wall.order(created_at: :desc).first
+      wall = Wall.where(is_closed: false).order(created_at: :desc).first
       @app_props = {
         wall: { 
           id: wall.id, 
           owner: wall.owner.id,
           context: wall.context,
+          is_closed: wall.is_closed,
           contributions: wall.contributions.map { |contribution| { user: contribution.user.name, content: contribution.content } }
         }
       }
