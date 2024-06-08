@@ -58,7 +58,7 @@ class Api::V1::WallController < ApplicationController
       wall_image_prompt = generate_wall_image_prompt(wall_digest_response, artist)
       puts "wall_image_prompt:", wall_image_prompt
       image_url = generate_wall_image(wall_image_prompt)
-      File.open("public/#{wall.id}.jpg", "wb") do |file|
+      File.open("public/images/#{wall.id}.jpg", "wb") do |file|
         file.write(URI.open(image_url).read)
       end
       local_image_url = "/images/#{wall.id}.jpg"
