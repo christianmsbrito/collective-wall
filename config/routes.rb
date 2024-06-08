@@ -1,7 +1,4 @@
 Rails.application.routes.draw do
-  # WEB routes
-  root 'homepage#index'
-
   # API routes
   namespace :api do
     namespace :v1 do
@@ -16,4 +13,8 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  get '*path', to: 'homepage#index', constraints: ->(req) { req.format.html? && !req.path.start_with?('/api') }
+
+  root 'homepage#index'
 end
