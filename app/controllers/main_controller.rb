@@ -1,4 +1,4 @@
-class HomepageController < ApplicationController
+class MainController < ApplicationController
   def index
     test_user = User.find_or_create_by(name: "Test User")
 

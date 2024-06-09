@@ -14,7 +14,9 @@ Rails.application.routes.draw do
     end
   end
 
-  get '*path', to: 'homepage#index', constraints: ->(req) { req.format.html? && !req.path.start_with?('/api') }
+  get 'walls', to: 'walls#index'
 
-  root 'homepage#index'
+  get '*path', to: 'main#index', constraints: ->(req) { req.format.html? && !req.path.start_with?('/api') }
+
+  root 'main#index'
 end

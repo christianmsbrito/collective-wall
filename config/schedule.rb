@@ -20,5 +20,5 @@
 # Learn more: http://github.com/javan/whenever
 
 every 1.day, at: '12:00 am' do
-    runner "HomepageController.new_wall"
+    runner "MainController.new_wall"
 end
