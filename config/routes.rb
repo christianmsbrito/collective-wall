@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     end
   end
 
-  get 'walls', to: 'walls#index'
+  resources :walls, only: [:index, :show]
 
   get '*path', to: 'main#index', constraints: ->(req) { req.format.html? && !req.path.start_with?('/api') }
 
