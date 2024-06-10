@@ -82,102 +82,46 @@ function Walls({ props }) {
 
   const [walls, setWalls] = useState([]);
 
-// useEffect(() => {
-//     const initialMessages = props?.walls?.flatMap((wall) => [
-//         wall?.context,
-//         ...wall?.contributions?.map((contribution) => contribution.content),
-//     ]);
-//     setMessages(initialMessages);
-// }, [props]);
-
-//   const handleSubmit = async (input) => {
-//     setIsLoading(true);
-//     setError(null);
-//     try {
-//       await api.wall(props.wall.id).createContribution(props.wall.owner, input);
-//       setMessages((prevMessages) => [...prevMessages, input]);
-//     } catch (err) {
-//       setError("Failed to send message");
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   const paintWall = async () => {
-//     setIsLoading(true);
-//     setError(null);
-//     try {
-//       const { image } = await api.wall(props.wall.id).paint();
-//       console.log(image);
-//       setImage(image);
-//       setIsClosed(true);
-//     } catch (err) {
-//       console.error(err);
-//       setError("Failed to paint wall");
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-  return (
+return (
     <Box
-      sx={{
-        width: "75%",
-        ml: "auto",
-        mr: "auto",
-        p: 2,
-      }}
-    >
-      <Box
         sx={{
-          display: "flex",
-          direction: "row",
-          justifyContent: "space-between",
+            width: "75%",
+            ml: "auto",
+            mr: "auto",
+            p: 2,
         }}
-      >
-        {/* <Typography variant="h3">Collective Wall</Typography> */}
+    >
         <Box
-          sx={{
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
-          }}
-        >
-          {/* <Button variant="contained" color="primary">
-            Button 1
-          </Button> */}
-          {/* { !isClosed && <Button
-            variant="contained"
-            color="secondary"
-            sx={{ ml: 2 }}
-            onClick={paintWall}
-          >
-            Paint
-          </Button> } */}
-
-          { props?.walls?.map((wall) => <Wall key={wall.id} props={wall} />)}
-        </Box>
-      </Box>
-      <ChatMessages messages={messages} />
-      {error && <Typography color="error">{error}</Typography>}
-      {/* {!image && <ChatInput onSubmit={handleSubmit} isLoading={isLoading} />} */}
-      {image && (
-        <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
-          <img
-            src={image}
-            alt="test"
-            style={{
-              width: "100%",
-              height: "auto",
-              maxWidth: "100vw",
-              maxHeight: "100vh",
+            sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: 2,
             }}
-          />
+        >
+            {props?.walls?.map((wall) => (
+                <Wall key={wall.id} props={wall} />
+            ))}
         </Box>
-      )}
+        <ChatMessages messages={messages} />
+        {error && <Typography color="error">{error}</Typography>}
+        {/* {!image && <ChatInput onSubmit={handleSubmit} isLoading={isLoading} />} */}
+        {image && (
+            <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+                <img
+                    src={image}
+                    alt="test"
+                    style={{
+                        width: "100%",
+                        height: "auto",
+                        maxWidth: "100vw",
+                        maxHeight: "100vh",
+                    }}
+                />
+            </Box>
+        )}
     </Box>
     // <>Test</>
-  );
+);
 }
 
 export default Walls;
