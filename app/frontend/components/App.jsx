@@ -11,6 +11,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Chat props={props} />} />
         <Route path="/walls" element={<Walls props={props} />} />
+        <Route path="/walls/:id" element={<Chat props={props} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

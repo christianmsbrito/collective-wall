@@ -9,6 +9,7 @@ class WallsController < ApplicationController
           owner: wall.owner.id,
           context: wall.context,
           is_closed: wall.is_closed,
+          image: wall.image_url,
           contributions: wall.contributions.map { |contribution| { user: contribution.user.name, content: contribution.content } }
         }
       end
@@ -17,8 +18,22 @@ class WallsController < ApplicationController
     render 'main/index'
   end
 
-  # def new
-  # end
+  def show
+    wall = Wall.find(params[:id])
+
+    @app_props = {
+      wall: {
+        id: wall.id,
+        owner: wall.owner.id,
+        context: wall.context,
+        is_closed: wall.is_closed,
+        image: wall.image_url,
+        contributions: wall.contributions.map { |contribution| { user: contribution.user.name, content: contribution.content } }
+      }
+    }
+
+    render 'main/index'
+  end
 
   # def create
   # end

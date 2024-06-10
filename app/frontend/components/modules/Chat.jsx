@@ -76,7 +76,7 @@ function ChatContainer({ props }) {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(props?.wall?.image);
   const [isClosed, setIsClosed] = useState(props.wall.is_closed);
 
   useEffect(() => {
