@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { api } from "../../api";
+import styled from "styled-components";
 import {
   TextField,
   Box,
@@ -8,7 +8,15 @@ import {
   CircularProgress,
   Tooltip,
 } from "@mui/material";
+import { api } from "../../api";
 import Wall from "./Wall";
+
+const WallWrapper = styled.div`
+  cursor: pointer;
+  &:hover {
+    border: 1px solid black;
+  }
+`;
 
 function ChatMessages({ messages }) {
   return (
@@ -82,46 +90,55 @@ function Walls({ props }) {
 
   const [walls, setWalls] = useState([]);
 
-return (
+  return (
     <Box
-        sx={{
-            width: "75%",
-            ml: "auto",
-            mr: "auto",
-            p: 2,
-        }}
+      sx={{
+        width: "75%",
+        ml: "auto",
+        mr: "auto",
+        p: 2,
+      }}
     >
-        <Box
-            sx={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 2,
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: 2,
+        }}
+      >
+        {props?.walls?.map((wall) => (
+          <WallWrapper
+            onClick={() => {
+              window.location.href = `/walls/${wall.id}`;
             }}
-        >
-            {props?.walls?.map((wall) => (
-                <Wall key={wall.id} props={wall} />
-            ))}
-        </Box>
-        <ChatMessages messages={messages} />
-        {error && <Typography color="error">{error}</Typography>}
-        {/* {!image && <ChatInput onSubmit={handleSubmit} isLoading={isLoading} />} */}
-        {image && (
-            <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
-                <img
-                    src={image}
-                    alt="test"
-                    style={{
-                        width: "100%",
-                        height: "auto",
-                        maxWidth: "100vw",
-                        maxHeight: "100vh",
-                    }}
-                />
-            </Box>
-        )}
+            >
+            <Wall
+              key={wall.id}
+              props={wall}
+            />
+          </WallWrapper>
+        ))}
+      </Box>
+      <ChatMessages messages={messages} />
+      {error && <Typography color="error">{error}</Typography>}
+      {/* {!image && <ChatInput onSubmit={handleSubmit} isLoading={isLoading} />} */}
+      {/* {image && (
+      <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+        <img
+          src={image}
+          alt="test"
+          style={{
+            width: "100%",
+            height: "auto",
+            maxWidth: "100vw",
+            maxHeight: "100vh",
+          }}
+        />
+      </Box>
+    )} */}
     </Box>
     // <>Test</>
-);
+  );
 }
 
 export default Walls;
