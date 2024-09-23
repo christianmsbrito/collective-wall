@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { TextField, Button, Box, Typography, Container } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Container,
+  Link,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
@@ -34,9 +41,8 @@ const RegisterForm = () => {
     }
 
     if (!password || !validatePassword(password)) {
-      console.log("password", password);
       validationErrors.password =
-        "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number";
+        "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character";
     }
 
     if (password !== confirmPassword) {
@@ -46,7 +52,13 @@ const RegisterForm = () => {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
-      console.log("Registration successful!");
+      // Simulate registration logic here (e.g., store user data)
+      const userData = { username, email, password };
+
+      // Save user data to localStorage
+      localStorage.setItem("user", JSON.stringify(userData));
+
+      // Navigate to the root page
       navigate("/");
     }
   };
@@ -128,6 +140,12 @@ const RegisterForm = () => {
           >
             Register
           </Button>
+          <Typography variant="body2" sx={{ mt: 2 }}>
+            Already have an account?{" "}
+            <Link onClick={() => navigate("/login")} sx={{ cursor: "pointer" }}>
+              Login here
+            </Link>
+          </Typography>
         </Box>
       </Box>
     </Container>

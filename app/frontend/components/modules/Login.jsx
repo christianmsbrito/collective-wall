@@ -1,15 +1,39 @@
-import React, { useState } from 'react';
-import { TextField, Button, Box, Typography, Container } from '@mui/material';
+import React, { useState } from "react";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Container,
+  Link,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "./contexts/UserContext";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const { setUser } = useUser();
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Handle login logic here (e.g., send login request)
-    console.log('Email:', email);
-    console.log('Password:', password);
+
+    // Get user data from localStorage
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    // Check if email and password match the stored data
+    if (
+      storedUser &&
+      storedUser.email === email &&
+      storedUser.password === password
+    ) {
+      setUser(storedUser); // Update the session state
+      navigate("/"); // Redirect to home
+    } else {
+      setError("Invalid email or password");
+    }
   };
 
   return (
@@ -17,9 +41,9 @@ const LoginForm = () => {
       <Box
         sx={{
           marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <Typography component="h1" variant="h5">
@@ -50,6 +74,11 @@ const LoginForm = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          {error && (
+            <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+              {error}
+            </Typography>
+          )}
           <Button
             type="submit"
             fullWidth
@@ -58,6 +87,15 @@ const LoginForm = () => {
           >
             Login
           </Button>
+          <Typography variant="body2" sx={{ mt: 2 }}>
+            Don't have an account?{" "}
+            <Link
+              onClick={() => navigate("/register")}
+              sx={{ cursor: "pointer" }}
+            >
+              Register here
+            </Link>
+          </Typography>
         </Box>
       </Box>
     </Container>
