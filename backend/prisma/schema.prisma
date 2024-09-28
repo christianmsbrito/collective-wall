@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../src/prisma/client"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  name         String
+  Contribution Contribution[]
+
+  @@map("users")
+}
+
+model Wall {
+  id        Int       @id @default(autoincrement()) // Assuming you need an auto-incrementing ID field
+  ownerId   Int
+  context   String?
+  endTime   DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  imageUrl  String?
+  isClosed  Boolean?  @default(false)
+
+  // One-to-many relation with Contribution
+  contributions Contribution[] @relation("WallContributions")
+
+  @@index([ownerId], name: "index_walls_on_owner_id")
+}
+
+model Contribution {
+  id        Int      @id @default(autoincrement()) // Auto-incrementing ID field
+  userId    Int
+  content   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  wallId    Int
+
+  // Relations
+  user User @relation(fields: [userId], references: [id])
+  wall Wall @relation(fields: [wallId], references: [id], name: "WallContributions")
+
+  @@index([userId], name: "index_contributions_on_user_id")
+  @@index([wallId], name: "index_contributions_on_wall_id")
+}
