@@ -3,6 +3,7 @@ import prisma from '../db';
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
+import { CustomRequest } from '..';
 
 const wallsRouter = express.Router();
 
@@ -75,24 +76,7 @@ wallsRouter.get('/:id', async (req, res) => {
   res.json(wall);
 });
 
-wallsRouter.post('/', async (req, res) => {
-  const user = await prisma.user.upsert({
-    where: { email: 'testuser@example.com' },
-    update: {},
-    create: { name: 'Test User', email: 'testuser@example.com' },
-  });
-
-  const wall = await prisma.wall.create({
-    data: {
-      context: req.body.context,
-      ownerId: user.id,
-    },
-  });
-
-  res.json(wall);
-});
-
-wallsRouter.post('/:id/contributions', async (req, res) => {
+wallsRouter.post('/:id/contributions', async (req: CustomRequest, res) => {
   const wall = await prisma.wall.findUnique({
     where: { id: parseInt(req.params.id) },
   });
@@ -102,7 +86,7 @@ wallsRouter.post('/:id/contributions', async (req, res) => {
       data: {
         content: req.body.contribution.content,
         // userId: req.body.contribution.user_id,
-        userId: 1,
+        userId: req.user.userId,
         wallId: wall.id,
       },
     });

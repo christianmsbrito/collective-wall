@@ -8,6 +8,8 @@ import {
   Link,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { register } from "../../api/user";
+import { useUser } from "./contexts/UserContext";
 
 const RegisterForm = () => {
   const [username, setUsername] = useState("");
@@ -15,6 +17,7 @@ const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const { handleLogin } = useUser();
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
@@ -28,7 +31,7 @@ const RegisterForm = () => {
     return passwordRegex.test(password);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     let validationErrors = {};
 
@@ -52,14 +55,17 @@ const RegisterForm = () => {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
-      // Simulate registration logic here (e.g., store user data)
-      const userData = { username, email, password };
+      try {
+        const data = await register(username, email, password); // Wait for the login API call to complete
 
-      // Save user data to localStorage
-      localStorage.setItem("user", JSON.stringify(userData));
-
-      // Navigate to the root page
-      navigate("/");
+        if (data) {
+          // Wait for handleLogin to fetch user data and set user state
+          await handleLogin();
+          navigate("/"); // Redirect after user state is updated
+        }
+      } catch (error) {
+        console.error("Registration error:", error);
+      }
     }
   };
 

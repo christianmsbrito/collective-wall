@@ -9,32 +9,34 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./contexts/UserContext";
+import { login } from "../../api/user";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { setUser } = useUser();
+  const { handleLogin } = useUser();
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // Get user data from localStorage
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-
-    // Check if email and password match the stored data
-    if (
-      storedUser &&
-      storedUser.email === email &&
-      storedUser.password === password
-    ) {
-      setUser(storedUser); // Update the session state
-      navigate("/"); // Redirect to home
-    } else {
-      setError("Invalid email or password");
+  
+    try {
+      const data = await login(email, password); // Wait for the login API call to complete
+  
+      if (data) {
+        // Wait for handleLogin to fetch user data and set user state
+        await handleLogin(); 
+        navigate("/"); // Redirect after user state is updated
+      } else {
+        setError("Invalid email or password");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("An error occurred during login.");
     }
   };
+  
 
   return (
     <Container component="main" maxWidth="xs">

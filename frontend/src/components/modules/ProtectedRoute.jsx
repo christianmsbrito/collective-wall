@@ -4,15 +4,19 @@ import { Navigate } from "react-router-dom";
 import { useUser } from "./contexts/UserContext";
 
 const ProtectedRoute = ({ children }) => {
-  const { user } = useUser();
-  console.log({ user });
+  const { user, loading } = useUser();
 
-  // If the user is not logged in, redirect to the login page
+  // Show a loading screen while checking user data
+  if (loading) {
+    return <div>Loading...</div>; // Replace with a proper loading spinner if needed
+  }
+
+  // Redirect to login if user is not authenticated and loading is complete
   if (!user) {
     return <Navigate to="/login" />;
   }
 
-  // If the user is logged in, allow access to the requested page
+  // Allow access if user is authenticated
   return children;
 };
 

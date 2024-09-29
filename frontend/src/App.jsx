@@ -10,7 +10,7 @@ import {
 import LoginForm from "./components/modules/Login";
 import RegisterForm from "./components/modules/Register";
 import { UserProvider } from "./components/modules/contexts/UserContext";
-// import ProtectedRoute from "./components/modules/ProtectedRoute";
+import ProtectedRoute from "./components/modules/ProtectedRoute";
 
 const App = () => {
   return (
@@ -20,25 +20,25 @@ const App = () => {
           <Route
             path="/"
             element={
-              // <ProtectedRoute>
+              <ProtectedRoute>
                 <Chat />
-              // </ProtectedRoute> 
+              </ProtectedRoute> 
             }
           />
           {/* <Route
             path="/walls"
             element={
-              // <ProtectedRoute>
+              <ProtectedRoute>
                 <Walls />
-              // </ProtectedRoute>
+              </ProtectedRoute>
             }
           /> */}
           <Route
             path="/walls/:id"
             element={
-              // <ProtectedRoute>
+              <ProtectedRoute>
                 <Chat />
-              // </ProtectedRoute>
+              </ProtectedRoute>
             }
           />
           <Route path="/register" element={<RegisterForm />} />
