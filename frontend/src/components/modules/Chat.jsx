@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { api } from "../../api";
+// import { api } from "../../api";
 import {
   TextField,
   Box,
@@ -8,7 +8,7 @@ import {
   CircularProgress,
   Tooltip,
 } from "@mui/material";
-import { getCurrentlyOpenedWall } from "../../api/wall";
+import { getCurrentlyOpenedWall, getWallById } from "../../api/wall";
 
 import PropTypes from 'prop-types';
 
@@ -85,18 +85,52 @@ function ChatContainer() {
   const [isClosed, setIsClosed] = useState(wall?.isClosed);
 
   useEffect(() => {
-    getCurrentlyOpenedWall().then((wall) => {
-      setWall(wall);
-      
-      const initialMessages = [
-        wall?.context,
-        ...(wall?.contributions ?? []).map(
-          (contribution) => contribution.content
-        ),
-      ];
-      setMessages(initialMessages);
-    })
+    const url = window.location.href;
+    const idMatch = url.match(/walls\/(\d+)$/);
+    if (idMatch) {
+      const wallId = idMatch[1];
+      getWallById(wallId).then((wall) => {
+        setWall(wall);
+        const initialMessages = [
+          wall?.context,
+          ...(wall?.contributions ?? []).map(
+            (contribution) => contribution.content
+          ),
+        ];
+        setMessages(initialMessages);
+        setImage(wall.imageUrl);
+      }).catch((err) => {
+        setError("Failed to fetch wall data");
+        console.error(err);
+      });
+    } else {
+      getCurrentlyOpenedWall().then((wall) => {
+        setWall(wall);
+        
+        const initialMessages = [
+          wall?.context,
+          ...(wall?.contributions ?? []).map(
+            (contribution) => contribution.content
+          ),
+        ];
+        setMessages(initialMessages);
+      })
+    }
   }, []);
+
+  // useEffect(() => {
+  //   getCurrentlyOpenedWall().then((wall) => {
+  //     setWall(wall);
+      
+  //     const initialMessages = [
+  //       wall?.context,
+  //       ...(wall?.contributions ?? []).map(
+  //         (contribution) => contribution.content
+  //       ),
+  //     ];
+  //     setMessages(initialMessages);
+  //   })
+  // }, []);
 
   const handleSubmit = async (input) => {
     setIsLoading(true);
@@ -116,7 +150,6 @@ function ChatContainer() {
     setError(null);
     try {
       const { image } = await api.wall(wall.id).paint();
-      console.log(image);
       setImage(image);
       setIsClosed(true);
     } catch (err) {

@@ -34,10 +34,8 @@ export const UserProvider = ({ children }) => {
       .find((row) => row.startsWith("token="));
     if (token) {
       const tokenValue = token.split("=")[1];
-      console.log("tokenValue", tokenValue);
       try {
         const { data } = await getUserData(tokenValue);
-        console.log("data", data);
         setUser(data);
         localStorage.setItem("user", JSON.stringify(data));
       } catch (error) {
