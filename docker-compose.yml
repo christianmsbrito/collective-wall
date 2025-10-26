@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: myapp_development
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: .
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    ports:
+      - "3001:3000"
+    environment:
+      DATABASE_URL: postgres://postgres:password@db:5432/myapp_development
+
+  # If the frontend requires a separate service, adjust as needed.
+  # This example assumes the frontend is served through the Rails app.
+  # frontend:
+  #   build:
+  #     context: .
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - .:/app
+  #   stdin_open: true
+  #   tty: true
+
+volumes:
+  postgres_data:

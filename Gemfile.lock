@@ -79,7 +79,7 @@ GEM
     dry-cli (1.0.0)
     erubi (1.12.0)
     event_stream_parser (1.0.0)
-    faraday (2.9.0)
+    faraday (2.9.2)
       faraday-net_http (>= 2.0, < 3.2)
     faraday-multipart (1.0.4)
       multipart-post (~> 2)
@@ -105,7 +105,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.5)
     minitest (5.22.3)
-    multipart-post (2.4.0)
+    multipart-post (2.4.1)
     net-http (0.4.1)
       uri
     net-imap (0.4.10)
@@ -120,6 +120,7 @@ GEM
     nio4r (2.7.1)
     nokogiri (1.16.4-x86_64-linux)
       racc (~> 1.4)
+    pg (1.5.6)
     psych (5.1.2)
       stringio
     puma (5.6.8)
@@ -163,7 +164,7 @@ GEM
       psych (>= 4.0.0)
     reline (0.5.1)
       io-console (~> 0.5)
-    ruby-openai (6.5.0)
+    ruby-openai (7.1.0)
       event_stream_parser (>= 0.3.0, < 2.0.0)
       faraday (>= 1)
       faraday-multipart (>= 1)
@@ -202,9 +203,10 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   debug
   dotenv (~> 3.1)
+  pg
   puma (~> 5.0)
   rails (~> 7.0.7, >= 7.0.7.2)
-  ruby-openai (~> 6.5.0)
+  ruby-openai (~> 7.1.0)
   sprockets-rails
   sqlite3 (~> 1.4)
   tzinfo-data
